@@ -1,5 +1,5 @@
 import requests
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Comment
 import pandas as pd
 
 
@@ -9,11 +9,17 @@ def get_nba_stats():
     bb_ref_url = "https://www.basketball-reference.com/teams/{}/2023.html".format(team)
 
     res = requests.get(bb_ref_url)
-    with open("teams/{}.html".format(team), "w+") as f:
-        f.write(res.text)
 
     soup = BeautifulSoup(res.text, 'html.parser')
-    per36 = soup.find(id="per_minute")
+
+    div = soup.find("table")
+    per36tbl = pd.read_html(str(div))
+
+    print(per36tbl)
+
+    # tbl = div.find(id="div_per_minute")
+    # soup = soup.find(id="div_per_minute")
+    # print(tbl)
     # per36tbl = pd.read_html(str(per36))
     # print(per36tbl)
 
