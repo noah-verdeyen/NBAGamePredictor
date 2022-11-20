@@ -1,0 +1,18 @@
+    team = input("Input team as three letter code i.e. CHI ")
+
+    url = 'https://www.basketball-reference.com/teams/{}/2023.html#all_per_minute-playoffs_per_minute'.format(team.upper())
+
+    res = requests.get(url)
+    print(res)
+    res_html = res.text
+    soup = BeautifulSoup(res_html, 'html.parser')
+
+    table = soup.findAll(class_="full_table")
+
+    head = soup.find(class_="head")
+    if head is not None:
+        column_names_raw = [head.text for item in head][0]
+        column_names_polished = column_names_raw.replace("\n", ",").split(",")[2:-1]
+        print(column_names_polished)
+    else:
+        print(head)
