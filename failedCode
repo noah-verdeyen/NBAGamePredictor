@@ -16,3 +16,12 @@
         print(column_names_polished)
     else:
         print(head)
+
+
+    with open("head_to_head/home.csv") as home_csv_file:
+        home_data = csv.reader(home_csv_file, delimiter=',')
+
+    with open("head_to_head/away.csv") as away_csv_file:
+        away_data = csv.reader(away_csv_file, delimiter=',')
+        for row in away_data:
+            print(row)
