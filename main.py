@@ -3,27 +3,26 @@ from bs4 import BeautifulSoup, Comment
 import pandas as pd
 
 
-def get_nba_stats():
-    team = input("team? ")
-    team = team.upper()
-    bb_ref_url = "https://www.basketball-reference.com/teams/{}/2023.html".format(team)
+def get_nba_stats(team, is_home_team):
+    # implement a way to select different tables
+    bb_ref_url = "https://www.basketball-reference.com/teams/{}/2023.html".format(team.upper())
+    req = requests.get(bb_ref_url)
+    soup = BeautifulSoup(req.text, 'html.parser')
 
-    res = requests.get(bb_ref_url)
+    table = soup.findAll("table")
+    list_of_frames = pd.read_html(str(table[3]))
+    res = pd.concat(list_of_frames)
 
-    soup = BeautifulSoup(res.text, 'html.parser')
+    if is_home_team:
+        with open("head_to_head/home.csv", "+w") as f:
+            f.write(str(res.to_csv("head_to_head/home.csv")))
+    else:
+        with open("head_to_head/away.csv", "+w") as f:
+            f.write(str(res.to_csv("head_to_head/away.csv")))
 
-    div = soup.find("table")
-    per36tbl = pd.read_html(str(div))
-
-    print(per36tbl)
-
-    # tbl = div.find(id="div_per_minute")
-    # soup = soup.find(id="div_per_minute")
-    # print(tbl)
-    # per36tbl = pd.read_html(str(per36))
-    # print(per36tbl)
+    return res
 
 
 if __name__ == "__main__":
-    get_nba_stats()
-    print("done:)")
+    away_team_stats = get_nba_stats(input("away? "), False)
+    home_team_stats = get_nba_stats(input("home? "), True)
