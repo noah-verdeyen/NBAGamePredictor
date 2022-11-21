@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup, Comment
 import pandas as pd
+import csv
 
 
 def get_nba_stats(team, is_home_team):
@@ -23,6 +24,29 @@ def get_nba_stats(team, is_home_team):
     return res
 
 
+def compare_scoring():
+    with open("head_to_head/home.csv") as home_csv_file:
+        home_data = csv.reader(home_csv_file)
+
+    with open("head_to_head/away.csv") as away_csv_file:
+        away_data = csv.reader(away_csv_file)
+
+    print(home_data)
+    print(away_data)
+
+    total_away_scoring = 0
+    for rows in away_data:
+        # if total_away_scoring == 0:
+
+        print(rows)
+
+    return 0
+
+
 if __name__ == "__main__":
+    # scrape data
     away_team_stats = get_nba_stats(input("away? "), False)
     home_team_stats = get_nba_stats(input("home? "), True)
+
+    # first metric, scoring, home team is a positive value, away is a negative
+    scoring = compare_scoring()
