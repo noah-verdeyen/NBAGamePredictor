@@ -1,145 +1,38 @@
-import requests
-from bs4 import BeautifulSoup, Comment
-import pandas as pd
-
-
-def get_nba_stats(team, is_home_team, table_id):
-    # implement a way to select different tables
-    bb_ref_url = "https://www.basketball-reference.com/teams/{}/2023.html".format(team.upper())
-    req = requests.get(bb_ref_url)
-    soup = BeautifulSoup(req.text, 'html.parser')
-
-    table = soup.findAll("table")
-    list_of_frames = pd.read_html(str(table[table_id]))
-    res = pd.concat(list_of_frames)
-
-    if is_home_team:
-        with open("head_to_head/home.csv", "+w") as f:
-            f.write(str(res.to_csv("head_to_head/home.csv")))
-    else:
-        with open("head_to_head/away.csv", "+w") as f:
-            f.write(str(res.to_csv("head_to_head/away.csv")))
-
-
-def compare_scoring():
-    data = []
-    with open("head_to_head/away.csv", 'r', encoding="utf8") as f:
-        for line in f:
-            data.append(line.strip().split(','))
-
-    line = data[len(data) - 1]
-    total_away_points = line[len(line) - 1]
-
-    data = []
-    with open("head_to_head/home.csv", 'r', encoding="utf8") as f:
-        for line in f:
-            data.append(line.strip().split(','))
-
-    line = data[len(data) - 1]
-    total_home_points = line[len(line) - 1]
-
-    return total_home_points, total_away_points
-
-
-def compare_rebounding():
-    data = []
-    with open("head_to_head/away.csv", 'r', encoding="utf8") as f:
-        for line in f:
-            data.append(line.strip().split(','))
-
-    line = data[len(data) - 1]
-    total_away_rebounds = line[22]
-
-    data = []
-    with open("head_to_head/home.csv", 'r', encoding="utf8") as f:
-        for line in f:
-            data.append(line.strip().split(','))
-
-    line = data[len(data) - 1]
-    total_home_rebounds = line[22]
-
-    return total_home_rebounds, total_away_rebounds
-
-
-def compare_assists():
-    data = []
-    with open("head_to_head/away.csv", 'r', encoding="utf8") as f:
-        for line in f:
-            data.append(line.strip().split(','))
-
-    line = data[len(data) - 1]
-    total_away_assists = line[23]
-
-    data = []
-    with open("head_to_head/home.csv", 'r', encoding="utf8") as f:
-        for line in f:
-            data.append(line.strip().split(','))
-
-    line = data[len(data) - 1]
-    total_home_assists = line[23]
-
-    return total_home_assists, total_away_assists
-
-
-def get_games_played():
-    data = []
-    with open("head_to_head/away.csv", 'r', encoding="utf8") as f:
-        for line in f:
-            data.append(line.strip().split(','))
-
-    line = data[len(data) - 1]
-    total_away_games = float(line[4])
-
-    data = []
-    with open("head_to_head/home.csv", 'r', encoding="utf8") as f:
-        for line in f:
-            data.append(line.strip().split(','))
-
-    line = data[len(data) - 1]
-    total_home_games = float(line[4])
-
-    return total_home_games, total_away_games
-
-
-def convert_to_per_game(data):
-    gp_home = int(data[0][0])
-    gp_away = int(data[0][1])
-
-    res = []
-
-    for pair in data:
-        home_data = float(pair[0]) / gp_away
-        away_data = float(pair[1]) / gp_home
-        res.append((home_data, away_data))
-
-    return res
+from data_collection import *
+from compare_functions import *
 
 
 if __name__ == "__main__":
-    # scrape scrape for counting data
-    home_team = input("Home: ")
-    away_team = input("Away: ")
+    # scrape BBallRef for counting data
+    home_team_input = input("Home: ")
+    away_team_input = input("Away: ")
+    get_nba_stats(home_team_input, True, 2)
+    get_nba_stats(away_team_input, False, 2)
 
-    get_nba_stats(home_team, True, 2)
-    get_nba_stats(away_team, False, 2)
-
-    # games played
+    # data collection
     games_played = get_games_played()
-    # scoring
     scoring = compare_scoring()
-    # rebounding
     rebounding = compare_rebounding()
-    # assists
     assists = compare_assists()
 
-    print("Games: " + str(games_played))
-    print("pDiff: " + str(scoring))
-    print("rDiff: " + str(rebounding))
-    print("aDiff: " + str(assists))
-
+    # get data on a per game level
     per_game_data = convert_to_per_game((games_played, scoring, rebounding, assists))
-
     scoring_per_game = per_game_data[1]
     rebounding_per_game = per_game_data[2]
     assists_per_game = per_game_data[3]
 
+    # start comparisons (-) means away team is ahead (+) means home team is ahead
+    offense_ppg_diff = per_game_diff(scoring_per_game)
+    reb_per_game_diff = per_game_diff(rebounding_per_game)
+    ass_per_game_diff = per_game_diff(assists_per_game)
+
+    per_game_winner = compare_per_game_stats((offense_ppg_diff, reb_per_game_diff, ass_per_game_diff))
+
+    if per_game_winner > 0:
+        print(home_team_input.upper(), " WINS!")
+        print("RANK: ", per_game_winner)
+    elif per_game_winner < 0:
+        print(away_team_input.upper(), " WINS!")
+        print("RANK: ", per_game_winner)
+    else:
+        print("NO CURRENT WINNER, ADD MORE DATA")
