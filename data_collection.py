@@ -1,5 +1,5 @@
 import requests
-from bs4 import BeautifulSoup, Comment
+from bs4 import BeautifulSoup
 import pandas as pd
 
 
@@ -114,5 +114,151 @@ def convert_to_per_game(data):
 
     return res
 
+
 def collect_player_data():
+    data = []
+    with open("head_to_head/away.csv", 'r', encoding="utf8") as f:
+        for line in f:
+            data.append(line.strip().split(','))
+            if line != data[len(data) - 1]:
+                continue
+
     return
+
+
+def average_true_shooting():
+    data = []
+    with open("head_to_head/away.csv", 'r', encoding="utf8") as f:
+        for line in f:
+            data.append(line.strip().split(','))
+    ts = []
+    for line in data:
+        if line == data[0]:
+            continue
+
+        if int(line[1]) <= 5:
+            ts.append(float(line[7]))
+        elif 12 > int(line[1]) > 5:
+            ts.append(float(line[7]) * 0.67)
+
+    away_ts_percent = sum(ts) / len(ts)
+
+    data = []
+    with open("head_to_head/home.csv", 'r', encoding="utf8") as f:
+        for line in f:
+            data.append(line.strip().split(','))
+    ts = []
+    for line in data:
+        if line == data[0]:
+            continue
+
+        if int(line[1]) <= 5:
+            ts.append(float(line[7]))
+        elif 12 > int(line[1]) > 5:
+            ts.append(float(line[7]) * 0.67)
+
+    home_ts_percent = sum(ts) / len(ts)
+
+    return home_ts_percent, away_ts_percent
+
+
+def average_vorp():
+    data = []
+    with open("head_to_head/away.csv", 'r', encoding="utf8") as f:
+        for line in f:
+            data.append(line.strip().split(','))
+    ts = []
+    for line in data:
+        if line == data[0]:
+            continue
+
+        ts.append(float(line[len(line) - 1]))
+
+    away_vorp = sum(ts) / len(ts)
+
+    data = []
+    with open("head_to_head/home.csv", 'r', encoding="utf8") as f:
+        for line in f:
+            data.append(line.strip().split(','))
+    ts = []
+    for line in data:
+        if line == data[0]:
+            continue
+
+        ts.append(float(line[len(line) - 1]))
+
+    home_vorp = sum(ts) / len(ts)
+
+    return home_vorp, away_vorp
+
+
+def average_box_plus_minus():
+    data = []
+    with open("head_to_head/away.csv", 'r', encoding="utf8") as f:
+        for line in f:
+            data.append(line.strip().split(','))
+    ts = []
+    for line in data:
+        if line == data[0]:
+            continue
+
+        if int(line[1]) <= 5:
+            ts.append(float(line[len(line) - 2]))
+        elif 12 > int(line[1]) > 5:
+            ts.append(float(line[len(line) - 2]) * 0.67)
+
+    away_bpm = sum(ts) / len(ts)
+
+    data = []
+    with open("head_to_head/home.csv", 'r', encoding="utf8") as f:
+        for line in f:
+            data.append(line.strip().split(','))
+    ts = []
+    for line in data:
+        if line == data[0]:
+            continue
+
+        if int(line[1]) <= 5:
+            ts.append(float(line[len(line) - 2]))
+        elif 12 > int(line[1]) > 5:
+            ts.append(float(line[len(line) - 2]) * 0.67)
+
+    home_bpm = sum(ts) / len(ts)
+
+    return home_bpm, away_bpm
+
+
+def average_win_shares_per48(column):
+    data = []
+    with open("head_to_head/away.csv", 'r', encoding="utf8") as f:
+        for line in f:
+            data.append(line.strip().split(','))
+    ws = []
+    for line in data:
+        if line == data[0]:
+            continue
+
+        if int(line[1]) <= 5:
+            ws.append(float(line[len(line) - column]))
+        elif 12 > int(line[1]) > 5:
+            ws.append(float(line[len(line) - column]) * 0.67)
+
+    away_ws = sum(ws) / len(ws)
+
+    data = []
+    with open("head_to_head/home.csv", 'r', encoding="utf8") as f:
+        for line in f:
+            data.append(line.strip().split(','))
+    ws = []
+    for line in data:
+        if line == data[0]:
+            continue
+
+        if int(line[1]) <= 5:
+            ws.append(float(line[len(line) - column]))
+        elif 12 > int(line[1]) > 5:
+            ws.append(float(line[len(line) - column]) * 0.67)
+
+    home_ws = sum(ws) / len(ws)
+
+    return home_ws, away_ws

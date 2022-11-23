@@ -22,17 +22,45 @@ if __name__ == "__main__":
     assists_per_game = per_game_data[3]
 
     # start comparisons (-) means away team is ahead (+) means home team is ahead
-    offense_ppg_diff = per_game_diff(scoring_per_game)
-    reb_per_game_diff = per_game_diff(rebounding_per_game)
-    ass_per_game_diff = per_game_diff(assists_per_game)
+    offense_ppg_diff = get_diff(scoring_per_game)
+    reb_per_game_diff = get_diff(rebounding_per_game)
+    ass_per_game_diff = get_diff(assists_per_game)
+
+    # scrape for advanced stats
+    get_nba_stats(home_team_input, True, 3)
+    get_nba_stats(away_team_input, False, 3)
+
+    true_shooting = average_true_shooting()
+    avg_vorp = average_vorp()
+    avg_bpm = average_box_plus_minus()
+    avg_win_shares = average_win_shares_per48(6)
+    avg_def_win_shares = average_win_shares_per48(7)
+    avg_off_win_shares = average_win_shares_per48(8)
+
+    ts_diff = get_diff(true_shooting)
+    vorp_diff = get_diff(avg_vorp)
+    bpm_diff = get_diff(average_box_plus_minus())
+    ws_diff = get_diff(avg_win_shares)
+    ws_def_diff = get_diff(avg_def_win_shares)
+    ws_off_diff = get_diff(avg_off_win_shares)
 
     per_game_winner = compare_per_game_stats((offense_ppg_diff, reb_per_game_diff, ass_per_game_diff))
+    adv_winner = sum((ts_diff, vorp_diff, bpm_diff, ws_diff, ws_def_diff, ws_off_diff))
 
-    if per_game_winner > 0:
+    total_winner = per_game_winner + adv_winner
+
+    # todo counting stats are probably too strong for first run through
+    if total_winner > 0:
         print(home_team_input.upper(), " WINS!")
-        print("RANK: ", per_game_winner)
-    elif per_game_winner < 0:
+        print()
+        print("COUNTING RANK: ", per_game_winner)
+        print("ADVANCED RANK: ", adv_winner)
+        print("TOTAL RANK: ", total_winner)
+    elif total_winner < 0:
         print(away_team_input.upper(), " WINS!")
-        print("RANK: ", per_game_winner)
+        print()
+        print("COUNTING RANK: ", per_game_winner)
+        print("ADVANCED RANK: ", adv_winner)
+        print("TOTAL RANK: ", total_winner)
     else:
         print("NO CURRENT WINNER, ADD MORE DATA")

@@ -1,6 +1,6 @@
 
-def per_game_diff(data):
-	diff = int(data[0]) - int(data[1])
+def get_diff(data):
+	diff = float(data[0]) - float(data[1])
 	return diff
 
 
@@ -21,4 +21,4 @@ def compare_per_game_stats(data):
 	else:
 		apg = -1
 
-	return ppg + rpg + apg
+	return (ppg + rpg + apg) * 0.8
