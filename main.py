@@ -1,8 +1,10 @@
 from data_collection import *
 from compare_functions import *
+from database import *
+from header import *
 
 
-if __name__ == "__main__":
+def compare_two_teams():
     # scrape BBallRef for counting data
     home_team_input = input("Home: ")
     away_team_input = input("Away: ")
@@ -56,11 +58,33 @@ if __name__ == "__main__":
         print("COUNTING RANK: ", per_game_winner)
         print("ADVANCED RANK: ", adv_winner)
         print("TOTAL RANK: ", total_winner)
+
+        return "comp"
     elif total_winner < 0:
         print(away_team_input.upper(), " WINS!")
         print()
         print("COUNTING RANK: ", per_game_winner)
         print("ADVANCED RANK: ", adv_winner)
         print("TOTAL RANK: ", total_winner)
+
+        return "comp"
     else:
         print("NO CURRENT WINNER, ADD MORE DATA")
+
+        return "comp"
+
+    return "comp"
+
+
+if __name__ == "__main__":
+    cmd = "update"
+
+    if cmd == "update":
+        update_db()
+        scrub_csv()
+
+    if cmd == "comp":
+        cmd = compare_two_teams()
+
+    print("done")
+

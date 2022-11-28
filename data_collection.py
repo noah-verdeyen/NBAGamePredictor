@@ -14,16 +14,16 @@ def get_nba_stats(team, is_home_team, table_id):
     res = pd.concat(list_of_frames)
 
     if is_home_team:
-        with open("head_to_head/home.csv", "+w") as f:
-            f.write(str(res.to_csv("head_to_head/home.csv")))
+        with open("data/home.csv", "+w") as f:
+            f.write(str(res.to_csv("data/home.csv")))
     else:
-        with open("head_to_head/away.csv", "+w") as f:
-            f.write(str(res.to_csv("head_to_head/away.csv")))
+        with open("data/away.csv", "+w") as f:
+            f.write(str(res.to_csv("data/away.csv")))
 
 
 def compare_scoring():
     data = []
-    with open("head_to_head/away.csv", 'r', encoding="utf8") as f:
+    with open("data/away.csv", 'r', encoding="utf8") as f:
         for line in f:
             data.append(line.strip().split(','))
 
@@ -31,7 +31,7 @@ def compare_scoring():
     total_away_points = line[len(line) - 1]
 
     data = []
-    with open("head_to_head/home.csv", 'r', encoding="utf8") as f:
+    with open("data/home.csv", 'r', encoding="utf8") as f:
         for line in f:
             data.append(line.strip().split(','))
 
@@ -43,7 +43,7 @@ def compare_scoring():
 
 def compare_rebounding():
     data = []
-    with open("head_to_head/away.csv", 'r', encoding="utf8") as f:
+    with open("data/away.csv", 'r', encoding="utf8") as f:
         for line in f:
             data.append(line.strip().split(','))
 
@@ -51,7 +51,7 @@ def compare_rebounding():
     total_away_rebounds = line[22]
 
     data = []
-    with open("head_to_head/home.csv", 'r', encoding="utf8") as f:
+    with open("data/home.csv", 'r', encoding="utf8") as f:
         for line in f:
             data.append(line.strip().split(','))
 
@@ -63,7 +63,7 @@ def compare_rebounding():
 
 def compare_assists():
     data = []
-    with open("head_to_head/away.csv", 'r', encoding="utf8") as f:
+    with open("data/away.csv", 'r', encoding="utf8") as f:
         for line in f:
             data.append(line.strip().split(','))
 
@@ -71,7 +71,7 @@ def compare_assists():
     total_away_assists = line[23]
 
     data = []
-    with open("head_to_head/home.csv", 'r', encoding="utf8") as f:
+    with open("data/home.csv", 'r', encoding="utf8") as f:
         for line in f:
             data.append(line.strip().split(','))
 
@@ -83,7 +83,7 @@ def compare_assists():
 
 def get_games_played():
     data = []
-    with open("head_to_head/away.csv", 'r', encoding="utf8") as f:
+    with open("data/away.csv", 'r', encoding="utf8") as f:
         for line in f:
             data.append(line.strip().split(','))
 
@@ -91,7 +91,7 @@ def get_games_played():
     total_away_games = float(line[4])
 
     data = []
-    with open("head_to_head/home.csv", 'r', encoding="utf8") as f:
+    with open("data/home.csv", 'r', encoding="utf8") as f:
         for line in f:
             data.append(line.strip().split(','))
 
@@ -117,7 +117,7 @@ def convert_to_per_game(data):
 
 def collect_player_data():
     data = []
-    with open("head_to_head/away.csv", 'r', encoding="utf8") as f:
+    with open("data/away.csv", 'r', encoding="utf8") as f:
         for line in f:
             data.append(line.strip().split(','))
             if line != data[len(data) - 1]:
@@ -128,7 +128,7 @@ def collect_player_data():
 
 def average_true_shooting():
     data = []
-    with open("head_to_head/away.csv", 'r', encoding="utf8") as f:
+    with open("data/away.csv", 'r', encoding="utf8") as f:
         for line in f:
             data.append(line.strip().split(','))
     ts = []
@@ -144,7 +144,7 @@ def average_true_shooting():
     away_ts_percent = sum(ts) / len(ts)
 
     data = []
-    with open("head_to_head/home.csv", 'r', encoding="utf8") as f:
+    with open("data/home.csv", 'r', encoding="utf8") as f:
         for line in f:
             data.append(line.strip().split(','))
     ts = []
@@ -164,7 +164,7 @@ def average_true_shooting():
 
 def average_vorp():
     data = []
-    with open("head_to_head/away.csv", 'r', encoding="utf8") as f:
+    with open("data/away.csv", 'r', encoding="utf8") as f:
         for line in f:
             data.append(line.strip().split(','))
     ts = []
@@ -177,7 +177,7 @@ def average_vorp():
     away_vorp = sum(ts) / len(ts)
 
     data = []
-    with open("head_to_head/home.csv", 'r', encoding="utf8") as f:
+    with open("data/home.csv", 'r', encoding="utf8") as f:
         for line in f:
             data.append(line.strip().split(','))
     ts = []
@@ -194,7 +194,7 @@ def average_vorp():
 
 def average_box_plus_minus():
     data = []
-    with open("head_to_head/away.csv", 'r', encoding="utf8") as f:
+    with open("data/away.csv", 'r', encoding="utf8") as f:
         for line in f:
             data.append(line.strip().split(','))
     ts = []
@@ -210,7 +210,7 @@ def average_box_plus_minus():
     away_bpm = sum(ts) / len(ts)
 
     data = []
-    with open("head_to_head/home.csv", 'r', encoding="utf8") as f:
+    with open("data/home.csv", 'r', encoding="utf8") as f:
         for line in f:
             data.append(line.strip().split(','))
     ts = []
@@ -230,7 +230,7 @@ def average_box_plus_minus():
 
 def average_win_shares_per48(column):
     data = []
-    with open("head_to_head/away.csv", 'r', encoding="utf8") as f:
+    with open("data/away.csv", 'r', encoding="utf8") as f:
         for line in f:
             data.append(line.strip().split(','))
     ws = []
@@ -246,7 +246,7 @@ def average_win_shares_per48(column):
     away_ws = sum(ws) / len(ws)
 
     data = []
-    with open("head_to_head/home.csv", 'r', encoding="utf8") as f:
+    with open("data/home.csv", 'r', encoding="utf8") as f:
         for line in f:
             data.append(line.strip().split(','))
     ws = []
