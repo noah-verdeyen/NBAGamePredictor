@@ -1,7 +1,7 @@
 from data_collection import *
 from compare_functions import *
 from database import *
-from header import *
+import mysql.connector
 
 
 def compare_two_teams():
@@ -77,14 +77,25 @@ def compare_two_teams():
 
 
 if __name__ == "__main__":
-    cmd = "update"
-
-    if cmd == "update":
+    user = input("update? y/n: ")
+    if user.lower() == "y":
         update_db()
-        scrub_csv()
 
-    if cmd == "comp":
-        cmd = compare_two_teams()
+    print("connecting")
+    cnx = mysql.connector.connect(user='noahver', password='noahnoah',
+                                  host='127.0.0.1',
+                                  database='nba_stats')
+    print("status: ", cnx)
+    cursor = cnx.cursor()
 
-    print("done")
+    while not cnx.is_closed():
+        user = input("home team: ")
+        query = "select player_name, games_played, minutes_per_game, points_per_game, " \
+                "field_goal_percent, 3pt_field_goal_percent from current_players " \
+                "where team_id = '{}'".format(user.upper())
 
+        cursor.execute(str(query))
+        # | Player Name | Games Played | MPG | PPG | FG% | 3PT% |
+        for (player_name, games_played, mpg, ppg, fg, three) in cursor:
+            print(player_name, games_played, mpg, ppg, fg, three)
+        cnx.close()
