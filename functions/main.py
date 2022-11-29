@@ -77,9 +77,9 @@ def compare_two_teams():
 
 
 if __name__ == "__main__":
-    user = input("update? y/n: ")
-    if user.lower() == "y":
-        update_db()
+    # user = input("update? y/n: ")
+    # if user.lower() == "y":
+    # update_db()
 
     print("connecting")
     cnx = mysql.connector.connect(user='noahver', password='noahnoah',
