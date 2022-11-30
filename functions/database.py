@@ -1,12 +1,17 @@
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
+from google.cloud import bigquery
+from google.oauth2 import service_account
 
 
 def update_db():
+	credentials = service_account.Credentials.from_service_account_file(
+		'C:/Users/noahv/OneDrive/Desktop/NBA_Game_Predictor/nbaproject-370202-d8f9d59c5682.json')
 	print("updating...")
 	lookup = ["scoring", "rebounds", "assists-turnovers", "steals", "blocks", "fouls-minutes"]
 	data = []
+	client = bigquery.Client(credentials=credentials)
 
 	for metric in lookup:
 		p = 1
@@ -19,10 +24,10 @@ def update_db():
 			table = soup.findAll("table")
 			curr_frame = pd.concat(pd.read_html(str(table)))
 			data.append(curr_frame)
-
+			csv_path = "C:/Users/noahv/OneDrive/Desktop/NBA_Game_Predictor/data/{}.csv".format(metric)
 			p = p + 1
 			if p == 6:
-				with open("data/{}.csv".format(metric), "w", encoding="utf8") as f:
+				with open(csv_path, "w", encoding="utf8") as f:
 					final_data_frame = pd.concat(data)
 					final_data_frame.reset_index(inplace=True)
 					final_data_frame.drop(["index"], axis=1, inplace=True)
@@ -46,4 +51,14 @@ def update_db():
 					data.clear()
 					f.write(final_data_frame.to_csv())
 
+					table_id = "nbaproject-370202.nba_data_set.{}".format(metric)
+
+					job_config = bigquery.LoadJobConfig(
+						source_format=bigquery.SourceFormat.CSV, skip_leading_rows=1, autodetect=True,
+						write_disposition=bigquery.WriteDisposition.WRITE_TRUNCATE)
+
+					with open(csv_path, "rb") as source_file:
+						job = client.load_table_from_file(file_obj=source_file, destination=table_id, job_config=job_config)
+
+					print(job.result())
 	return "exit"
