@@ -62,6 +62,10 @@ def update_db():
 
 					print(job.result())
 
+	print("getting injuries...")
+	get_injury_report()
+	print("done")
+
 
 def get_injury_report():
 	credentials = service_account.Credentials.from_service_account_file(
