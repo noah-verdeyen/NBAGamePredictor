@@ -61,4 +61,31 @@ def update_db():
 						job = client.load_table_from_file(file_obj=source_file, destination=table_id, job_config=job_config)
 
 					print(job.result())
-	return "exit"
+
+
+def get_injury_report():
+	credentials = service_account.Credentials.from_service_account_file(
+		'C:/Users/noahv/OneDrive/Desktop/NBA_Game_Predictor/nbaproject-370202-d8f9d59c5682.json')
+	client = bigquery.Client(credentials=credentials)
+	cbs_url = "https://www.cbssports.com/nba/injuries/"
+	req = requests.get(cbs_url)
+	soup = BeautifulSoup(req.text, 'html.parser')
+
+	table = soup.findAll("table")
+	curr_frame = pd.concat(pd.read_html(str(table)))
+
+	curr_frame.reset_index(inplace=True)
+
+	table_id = "nbaproject-370202.nba_data_set.injuries"
+
+	job_config = bigquery.LoadJobConfig(
+		source_format=bigquery.SourceFormat.CSV, skip_leading_rows=1, autodetect=True,
+		write_disposition=bigquery.WriteDisposition.WRITE_TRUNCATE)
+
+	data = open("injuries.csv", "w")
+	data.write(curr_frame.to_csv())
+	data.close()
+
+	data = open("injuries.csv", "rb")
+	job = client.load_table_from_file(file_obj=data, destination=table_id, job_config=job_config)
+	print(job.result())

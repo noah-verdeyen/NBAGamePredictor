@@ -1,6 +1,5 @@
 Frontend:
     high - improve query lookup
-    low  - mock up UI
 
 Backend:
     high - get WHERE working for queries
@@ -8,7 +7,6 @@ Backend:
 
 SQL:
     high - create model to look at head-to-head match ups
-    high - get table for daily injuries
     high - get table for advanced stats that we cannot calculate
 
 Misc:
