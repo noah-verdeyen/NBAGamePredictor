@@ -2,7 +2,7 @@ Frontend:
     high - improve query lookup
 
 Backend:
-    high - get WHERE working for queries
+    high - get WHERE working for queries - kinda done? talk over how it would be easiest to compare teams
     med  - research how to create my own springboot server to host data
 
 SQL:
@@ -11,4 +11,4 @@ SQL:
 
 Misc:
     low  - research how difficult it would be to increase the scope of the project (i.e. other sports, fantasy, parlays)
-    low  - figure out how we want to compare us to vegas
+    med  - figure out how we want to compare us to vegas
