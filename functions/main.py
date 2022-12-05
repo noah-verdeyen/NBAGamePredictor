@@ -1,5 +1,5 @@
 from database import *
-from datetime import date
+from simulate import *
 import customtkinter
 from google.cloud import bigquery
 from google.oauth2 import service_account
@@ -26,20 +26,38 @@ awayTeam.pack(pady=12, padx=10)
 
 def compare_team():
     query = """
-    SELECT Player, Team, PPG__Points_Per_Game, FG___Field_Goal_Percentage 
-    FROM `nbaproject-370202.nba_data_set.scoring`
-    """
+            SELECT ppg.Player,
+            ppg.Team,
+            ppg.MPG__Minutes_Per_Game,
+            ppg.PPG__Points_Per_Game,
+            ppg.FG___Field_Goal_Percentage,
+            passing.A_TO__Assists_Per_Turnover
+            
+            FROM `nbaproject-370202.nba_data_set.scoring` ppg
+            INNER JOIN `nbaproject-370202.nba_data_set.assists-turnovers` passing
+            ON ppg.Player = passing.Player
+            """
     query_result = client.query(query)
-    print(query_result)
+    # print(query_result)
 
-    home_data = []
-    away_data = []
-
+    home_roster = []
+    away_roster = []
     for row in query_result:
-        if row["Team"] == str(homeTeam.get()).upper():
-            home_data.append(row)
-        elif row["Team"] == str(awayTeam.get()).upper():
-            away_data.append(row)
+        player = (row['Player'], row['Team'], row['PPG__Points_Per_Game'], row['FG___Field_Goal_Percentage'],
+                  row['MPG__Minutes_Per_Game'], row['A_TO__Assists_Per_Turnover'])
+
+        # if row["Team"] == str(homeTeam.get()).upper():
+        if row["Team"] == 'SAC':
+            home_roster.append(player)
+        # if row["Team"] == str(awayTeam.get()).upper():
+        elif row["Team"] == 'CHI':
+            away_roster.append(player)
+
+    # print(home_roster)
+    # print(away_roster)
+
+    print('calculating...')
+    run_sim(home_roster, away_roster, 10)
 
 
 comp_button = customtkinter.CTkButton(master=frame, text="Compare", command=compare_team)
