@@ -4,11 +4,9 @@ import pandas as pd
 from google.cloud import bigquery
 from google.oauth2 import service_account
 
-
+credentials = service_account.Credentials.from_service_account_file(
+	'C:/Users/noahv/OneDrive/Desktop/NBA_Game_Predictor/nbaproject-370202-d8f9d59c5682.json')
 def update_db():
-	credentials = service_account.Credentials.from_service_account_file(
-		'C:/Users/noahv/OneDrive/Desktop/NBA_Game_Predictor/nbaproject-370202-d8f9d59c5682.json')
-	print("updating...")
 	lookup = ["scoring", "rebounds", "assists-turnovers", "steals", "blocks", "fouls-minutes"]
 	data = []
 	client = bigquery.Client(credentials=credentials)
@@ -64,12 +62,12 @@ def update_db():
 
 	print("getting injuries...")
 	get_injury_report()
+
+	get_team_stats()
 	print("done")
 
 
 def get_injury_report():
-	credentials = service_account.Credentials.from_service_account_file(
-		'C:/Users/noahv/OneDrive/Desktop/NBA_Game_Predictor/nbaproject-370202-d8f9d59c5682.json')
 	client = bigquery.Client(credentials=credentials)
 	cbs_url = "https://www.cbssports.com/nba/injuries/"
 	req = requests.get(cbs_url)
@@ -93,3 +91,34 @@ def get_injury_report():
 	data = open("injuries.csv", "rb")
 	job = client.load_table_from_file(file_obj=data, destination=table_id, job_config=job_config)
 	print(job.result())
+
+
+def get_team_stats():
+	print("GETTING TEAM STATS")
+	client = bigquery.Client(credentials=credentials)
+	bb_ref_url = "https://www.basketball-reference.com/leagues/NBA_2023.html"
+	req = requests.get(bb_ref_url)
+	soup = BeautifulSoup(req.text, 'html.parser')
+	for n in (8, 10, 11):
+		table = soup.findAll("table")[n]
+		curr_frame = pd.concat(pd.read_html(str(table)))
+		print(curr_frame)
+		job_config = bigquery.LoadJobConfig(
+			source_format=bigquery.SourceFormat.CSV, skip_leading_rows=1, autodetect=True,
+			write_disposition=bigquery.WriteDisposition.WRITE_TRUNCATE)
+
+		if n == 8:
+			table_name = "team-per-100-stats"
+		elif n == 10:
+			table_name = "team-advanced-stats"
+		else:
+			table_name = "team-shooting-stats"
+
+		table_id = "nbaproject-370202.nba_data_set.{}".format(table_name)
+		data = open("{}.csv".format(table_name), "w")
+		data.write(curr_frame.to_csv())
+		data.close()
+
+		data = open("{}.csv".format(table_name), "rb")
+		job = client.load_table_from_file(file_obj=data, destination=table_id, job_config=job_config)
+		print(job.result())
