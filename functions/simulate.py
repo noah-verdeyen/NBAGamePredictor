@@ -1,30 +1,27 @@
 import numpy
 import random
 
-def run_sim(home_roster, away_roster, n):
-	# roster(Player, Team, PPG__Points_Per_Game, FG___Field_Goal_Percentage, MPG__Minutes_Per_Game, A_TO__Assists_Per_Turnover)
-	if n is None:
-		n = 10
+def run_sim(home_roster, away_roster):
+
 	home_score = 0
 	away_score = 0
 	for player in home_roster:
-		ppg_floor   = float(player[2]) * 0.75
-		ppg_ceiling = float(player[2]) * 1.25
+		raptor_offense = float(player[3])
+		raptor_defense = float(player[4])
 
-		ast_turnover_floor = float(player[4]) * 0.75
-		ast_turnover_ceiling = float(player[4]) * 1.25
-		home_score += numpy.average((ppg_ceiling, ppg_floor))
+		home_score += raptor_offense + raptor_defense
 
 	for player in away_roster:
-		ppg_floor   = float(player[2]) * 0.75
-		ppg_ceiling = float(player[2]) * 1.25
-		away_score += numpy.average((ppg_ceiling, ppg_floor))
+		raptor_offense = float(player[3])
+		raptor_defense = float(player[4])
 
-	print(home_roster[0][1] + ": {}".format(int(home_score)))
-	print(away_roster[0][1] + ": {}".format(int(away_score)))
+		away_score += raptor_offense + raptor_defense
+
+	print(round(int(home_score), 1))
+	print(round(int(away_score), 1))
 	if round(home_score) > round(away_score):
-		print("Home Wins!")
+		print("Home Team Wins!")
 	elif round(home_score) < round(away_score):
-		print("Away Wins!")
+		print("Away Team Wins!")
 	else:
-		print("Overtime")
+		print("Tie")

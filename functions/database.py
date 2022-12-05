@@ -64,6 +64,8 @@ def update_db():
 	get_injury_report()
 
 	get_team_stats()
+
+	get_advanced_stats()
 	print("done")
 
 
@@ -122,3 +124,23 @@ def get_team_stats():
 		data = open("{}.csv".format(table_name), "rb")
 		job = client.load_table_from_file(file_obj=data, destination=table_id, job_config=job_config)
 		print(job.result())
+
+
+def get_advanced_stats():
+	print("GETTING advanced STATS")
+	client = bigquery.Client(credentials=credentials)
+	five_thirty_eight = "https://projects.fivethirtyeight.com/nba-model/2023/latest_RAPTOR_by_team.csv"
+	req = requests.get(five_thirty_eight)
+	table = req.text
+	print(table)
+
+	data = open("player_advanced_stats.csv", "w")
+	data.write(table)
+	data.close()
+	table_id = "nbaproject-370202.nba_data_set.player_advanced_stats"
+	job_config = bigquery.LoadJobConfig(
+		source_format=bigquery.SourceFormat.CSV, skip_leading_rows=1, autodetect=True,
+		write_disposition=bigquery.WriteDisposition.WRITE_TRUNCATE)
+	data = open("player_advanced_stats.csv", "rb")
+	job = client.load_table_from_file(file_obj=data, destination=table_id, job_config=job_config)
+	print(job.result())
