@@ -17,11 +17,13 @@ except mariadb.Error as e:
 # Get Cursor
 cur = conn.cursor()
 # entire NBA player stats
+sql = """DROP TABLE player_stats"""
+cur.execute(sql)
 sql = """LOAD DATA LOCAL INFILE '/home/noah/NBAGamePredictor/player_stats.csv' INTO TABLE player_stats
          FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n'"""
 cur.execute(sql)
 sql = """ALTER IGNORE TABLE player_stats ADD UNIQUE INDEX u(player_id)"""
-
+cur.execute(sql)
 # make tables for each team
 teams = ['ATL', 'BOS', 'BRK', 'CHA', 'CHI',
          'CLE', 'DAL', 'DEN', 'DET', 'GSW',
@@ -31,6 +33,7 @@ teams = ['ATL', 'BOS', 'BRK', 'CHA', 'CHI',
          'SAC', 'SAS', 'TOR', 'UTA', 'WAS']
 
 for team in teams:
+    sql = """DROP TABLE {}""".format(team.lower())
     sql = """CREATE TABLE {} (SELECT * FROM player_stats WHERE team = '{}') """.format(team.lower(), team)
     print(sql)
     cur.execute(sql)
