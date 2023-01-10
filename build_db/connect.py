@@ -18,6 +18,8 @@ except mariadb.Error as e:
 cur = conn.cursor()
 sql = "USE nba_test"
 cur.execute(sql)
+sql = "CREATE TABLE player_stats"
+cur.execute(sql)
 # entire NBA player stats
 sql = """LOAD DATA LOCAL INFILE '/home/noah/NBAGamePredictor/player_stats.csv' INTO TABLE player_stats
          FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n'"""
