@@ -19,6 +19,8 @@ cur = conn.cursor()
 # entire NBA player stats
 sql = """DROP TABLE player_stats"""
 cur.execute(sql)
+sql = """CREATE TABLE player_stats"""
+cur.execute(sql)
 sql = """LOAD DATA LOCAL INFILE '/home/noah/NBAGamePredictor/player_stats.csv' INTO TABLE player_stats
          FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n'"""
 cur.execute(sql)
