@@ -19,7 +19,7 @@ cur = conn.cursor()
 sql = """USE nba_test"""
 cur.execute(sql)
 
-sql = """DROP TABLE *"""
+sql = """DROP TABLE player_stats"""
 cur.execute(sql)
 
 sql = """CREATE TABLE IF NOT EXISTS player_stats (
