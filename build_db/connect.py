@@ -34,6 +34,6 @@ for team in teams:
     sql = """CREATE TABLE {} (SELECT * FROM player_stats WHERE team = '{}') """.format(team.lower(), team)
     print(sql)
     cur.execute(sql)
-    sql = """ALTER IGNORE TABLE {} ADD UNIQUE INDEX u(player_id)""".format(team)
+    sql = """ALTER IGNORE TABLE {} ADD UNIQUE INDEX u(player_id)""".format(team.lower())
     print(sql)
     cur.execute(sql)
