@@ -20,7 +20,7 @@ options.set_preference("browser.download.folderList", 2)
 options.set_preference("browser.download.manager.showWhenStarting", False)
 options.set_preference("browser.download.dir", os.path.dirname(os.path.realpath(__file__)))
 options.set_preference("browser.helperApps.neverAsk.saveToDisk", "application/x-gzip")
-
+options.add_argument("--headless")
 driver = webdriver.Firefox(options=options)
 
 injuries = "https://www.rotowire.com/basketball/injury-report.php"
