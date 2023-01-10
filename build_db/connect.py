@@ -22,6 +22,7 @@ cur.execute(sql)
 sql = """DROP TABLE player_stats"""
 cur.execute(sql)
 
+# creates table for all players and stats
 sql = """CREATE TABLE IF NOT EXISTS player_stats (
          player_name varchar(30), player_id varchar(10),
          season int, season_type varchar(5), team varchar(3),
@@ -34,12 +35,14 @@ sql = """CREATE TABLE IF NOT EXISTS player_stats (
          predator_offense float, predator_defense float,
          predator_total float, pace_impact float)"""
 cur.execute(sql)
-# entire NBA player stats
+
+# loads our data
 sql = """LOAD DATA LOCAL INFILE '/home/noah/NBAGamePredictor/player_stats.csv' INTO TABLE player_stats
          FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n'"""
 cur.execute(sql)
 sql = """ALTER IGNORE TABLE player_stats ADD UNIQUE INDEX u(player_id)"""
 cur.execute(sql)
+
 # make tables for each team
 teams = ['ATL', 'BOS', 'BRK', 'CHA', 'CHI',
          'CLE', 'DAL', 'DEN', 'DET', 'GSW',
@@ -47,13 +50,18 @@ teams = ['ATL', 'BOS', 'BRK', 'CHA', 'CHI',
          'MIA', 'MIL', 'MIN', 'NOP', 'NYK',
          'OKC', 'ORL', 'PHI', 'PHO', 'POR',
          'SAC', 'SAS', 'TOR', 'UTA', 'WAS']
-
 for team in teams:
     sql = """DROP TABLE IF EXISTS {}""".format(team.lower())
     cur.execute(sql)
     sql = """CREATE TABLE IF NOT EXISTS {} (SELECT * FROM player_stats WHERE team = '{}') """.format(team.lower(), team)
-    print(sql)
     cur.execute(sql)
     sql = """ALTER IGNORE TABLE {} ADD UNIQUE INDEX u(player_id)""".format(team.lower())
-    print(sql)
     cur.execute(sql)
+
+sql = """CREATE TABLE IF NOT EXISTS injury_report (
+         player varchar(32), team varchar(3), pos varchar(2),
+         injury varchar(64), status varchar(16)"""
+cur.execute(sql)
+sql = """LOAD DATA LOCAL INFILE '/home/noah/NBAGamePredictor/build_db/nba-injury-report.csv' INTO TABLE injury_report
+         FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n'"""
+cur.execute(sql)

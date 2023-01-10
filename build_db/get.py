@@ -1,8 +1,6 @@
 import os.path
-
 import requests
 import time
-from sys import platform
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.options import Options
@@ -14,7 +12,7 @@ table = req.text
 data = open("player_stats.csv", "w")
 data.write(table)
 data.close()
-print(os.path.dirname(os.path.realpath(__file__)))
+
 options = Options()
 options.set_preference("browser.download.folderList", 2)
 options.set_preference("browser.download.manager.showWhenStarting", False)
@@ -26,9 +24,9 @@ driver = webdriver.Firefox(options=options)
 injuries = "https://www.rotowire.com/basketball/injury-report.php"
 driver.get(injuries)
 
-time.sleep(3)
+time.sleep(1)
 button = driver.find_element(By.XPATH, '//button[@class="export-button is-csv"]')
 button.click()
-time.sleep(3)
+time.sleep(1)
 
 driver.close()
