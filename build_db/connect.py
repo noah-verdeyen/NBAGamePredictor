@@ -31,7 +31,7 @@ teams = ['ATL', 'BOS', 'BRK', 'CHA', 'CHI',
          'SAC', 'SAS', 'TOR', 'UTA', 'WAS']
 
 for team in teams:
-    sql = """CREATE TABLE {} (SELECT * FROM player_stats.team = '{}') """.format(team.lower(), team)
+    sql = """CREATE TABLE {} (SELECT * FROM player_stats WHERE team = '{}') """.format(team.lower(), team)
     print(sql)
     cur.execute(sql)
     sql = """ALTER IGNORE TABLE {} ADD UNIQUE INDEX u(player_id)""".format(team)
