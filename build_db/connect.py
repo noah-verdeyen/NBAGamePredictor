@@ -49,7 +49,7 @@ teams = ['ATL', 'BOS', 'BRK', 'CHA', 'CHI',
          'SAC', 'SAS', 'TOR', 'UTA', 'WAS']
 
 for team in teams:
-    sql = """DROP TABLE {}""".format(team.lower())
+    sql = """DROP TABLE IF EXISTS {}""".format(team.lower())
     cur.execute(sql)
     sql = """CREATE TABLE IF NOT EXISTS {} (SELECT * FROM player_stats WHERE team = '{}') """.format(team.lower(), team)
     print(sql)
