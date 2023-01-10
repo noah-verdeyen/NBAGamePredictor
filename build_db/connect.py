@@ -19,7 +19,7 @@ cur = conn.cursor()
 sql = "USE nba_test"
 cur.execute(sql)
 # entire NBA player stats
-sql = """LOAD DATA LOCAL INFILE '/home/noah/NBAGamePredictor/player_stats.csv' player_stats
+sql = """LOAD DATA LOCAL INFILE '/home/noah/NBAGamePredictor/player_stats.csv' INTO TABLE player_stats
          FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n'"""
 cur.execute(sql)
 sql = """ALTER IGNORE TABLE player_stats ADD UNIQUE INDEX u(player_id)"""
