@@ -60,7 +60,7 @@ for team in teams:
 
 sql = """CREATE TABLE IF NOT EXISTS injury_report (
          player varchar(32), team varchar(3), pos varchar(2),
-         injury varchar(64), status varchar(16)"""
+         injury varchar(64), status varchar(16))"""
 cur.execute(sql)
 sql = """LOAD DATA LOCAL INFILE '/home/noah/NBAGamePredictor/build_db/nba-injury-report.csv' INTO TABLE injury_report
          FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n'"""
