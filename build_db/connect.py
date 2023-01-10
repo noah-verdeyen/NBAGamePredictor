@@ -18,6 +18,10 @@ except mariadb.Error as e:
 cur = conn.cursor()
 sql = """USE nba_test"""
 cur.execute(sql)
+
+sql = """DROP TABLE *"""
+cur.execute(sql)
+
 sql = """CREATE TABLE IF NOT EXISTS player_stats (
          player_name varchar(30), player_id varchar(10),
          season int, season_type varchar(5), team varchar(3),
