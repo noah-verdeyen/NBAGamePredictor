@@ -16,9 +16,19 @@ except mariadb.Error as e:
 
 # Get Cursor
 cur = conn.cursor()
-sql = "USE nba_test"
+sql = """USE nba_test"""
 cur.execute(sql)
-sql = "CREATE TABLE player_stats"
+sql = """CREATE TABLE player_stats (
+         player_name varchar(30), player_id varchar(10),
+         season int, season_type varchar(5), team varchar(3),
+         poss int, mp int, raptor_box_offense float,
+         raptor_box_defense float, raptor_box_total float,
+         raptor_onoff_offense float, raptor_onoff_defense float,
+         raptor_onoff_total float, raptor_offense float,
+         raptor_defense float, raptor_total float, war_total float,
+         war_reg_season float, war_playoffs float,
+         predator_offense float, predator_defense float,
+         predator_total float, pace_impact float)"""
 cur.execute(sql)
 # entire NBA player stats
 sql = """LOAD DATA LOCAL INFILE '/home/noah/NBAGamePredictor/player_stats.csv' INTO TABLE player_stats
