@@ -17,14 +17,14 @@ except mariadb.Error as e:
 # Get Cursor
 cur = conn.cursor()
 # entire NBA player stats
-sql = """DROP TABLE player_stats"""
+sql = """DROP TABLE nba_test.player_stats"""
 cur.execute(sql)
-sql = """CREATE TABLE player_stats"""
+sql = """CREATE TABLE nba_test.player_stats"""
 cur.execute(sql)
-sql = """LOAD DATA LOCAL INFILE '/home/noah/NBAGamePredictor/player_stats.csv' INTO TABLE player_stats
+sql = """LOAD DATA LOCAL INFILE '/home/noah/NBAGamePredictor/player_stats.csv' INTO TABLE nba_test.player_stats
          FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n'"""
 cur.execute(sql)
-sql = """ALTER IGNORE TABLE player_stats ADD UNIQUE INDEX u(player_id)"""
+sql = """ALTER IGNORE TABLE nba_test.player_stats ADD UNIQUE INDEX u(player_id)"""
 cur.execute(sql)
 # make tables for each team
 teams = ['ATL', 'BOS', 'BRK', 'CHA', 'CHI',
@@ -35,11 +35,11 @@ teams = ['ATL', 'BOS', 'BRK', 'CHA', 'CHI',
          'SAC', 'SAS', 'TOR', 'UTA', 'WAS']
 
 for team in teams:
-    sql = """DROP TABLE {}""".format(team.lower())
+    sql = """DROP TABLE nba_test.{}""".format(team.lower())
     cur.execute(sql)
-    sql = """CREATE TABLE {} (SELECT * FROM player_stats WHERE team = '{}') """.format(team.lower(), team)
+    sql = """CREATE TABLE nba_test.{} (SELECT * FROM nba_test.player_stats WHERE team = '{}') """.format(team.lower(), team)
     print(sql)
     cur.execute(sql)
-    sql = """ALTER IGNORE TABLE {} ADD UNIQUE INDEX u(player_id)""".format(team.lower())
+    sql = """ALTER IGNORE TABLE nba_test.{} ADD UNIQUE INDEX u(player_id)""".format(team.lower())
     print(sql)
     cur.execute(sql)
