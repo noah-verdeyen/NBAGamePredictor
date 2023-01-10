@@ -34,6 +34,7 @@ teams = ['ATL', 'BOS', 'BRK', 'CHA', 'CHI',
 
 for team in teams:
     sql = """DROP TABLE {}""".format(team.lower())
+    cur.execute(sql)
     sql = """CREATE TABLE {} (SELECT * FROM player_stats WHERE team = '{}') """.format(team.lower(), team)
     print(sql)
     cur.execute(sql)
