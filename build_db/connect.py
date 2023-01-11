@@ -60,9 +60,22 @@ for team in teams:
     sql = """ALTER IGNORE TABLE {} ADD UNIQUE INDEX u(player_id)""".format(team.lower())
     cur.execute(sql)
 
-csv_in = pd.read_csv("{}/nba-injury-report.csv".format(os.path.dirname(os.path.realpath(__file__))))
-csv_in['player_id'] = cur.execute("""SELECT player_id FROM player_stats WHERE player_name = '{}'""".format(csv_in['Player']))
-csv_in.to_csv('injury-report-with-ids.csv', index=False)
+import csv
+with open('nba-injury-report.csv','r') as csv_input:
+    with open('injury-report-with-ids.csv', 'w') as csv_output:
+        writer = csv.writer(csv_output, lineterminator='\n')
+        reader = csv.reader(csv_input)
+
+        data = []
+        row = next(reader)
+        row.append('player_id')
+        data.append(row)
+
+        for row in reader:
+            row.append(cur.execute("""SELECT player_id FROM player_stats WHERE player_name = '{}'""".format(row[0])))
+            data.append(row)
+
+        writer.writerows(data)
 
 sql = """CREATE TABLE IF NOT EXISTS injury_report (
          player varchar(32), team varchar(3), pos varchar(2),
