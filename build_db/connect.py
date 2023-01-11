@@ -1,7 +1,5 @@
 import mariadb
 import sys
-import os.path
-import pandas as pd
 
 try:
     conn = mariadb.connect(
@@ -61,8 +59,10 @@ for team in teams:
     cur.execute(sql)
 
 import csv
-with open('nba-injury-report.csv','r') as csv_input:
-    with open('injury-report-with-ids.csv', 'w') as csv_output:
+import os.path
+curr_dir = os.path.dirname(os.path.realpath(__file__))
+with open(curr_dir + 'nba-injury-report.csv','r') as csv_input:
+    with open(curr_dir + 'injury-report-with-ids.csv', 'w') as csv_output:
         writer = csv.writer(csv_output, lineterminator='\n')
         reader = csv.reader(csv_input)
 
