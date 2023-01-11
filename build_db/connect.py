@@ -74,7 +74,7 @@ curr_dir = os.path.dirname(os.path.realpath(__file__))
 #     data['player_id'] = player_id
 with open(curr_dir + '/injury-report-with-ids.csv' 'w') as f:
     f.write("fuck you")
-print(data.to_csv(curr_dir + '/injury-report-with-ids.csv'))
+print(curr_dir + '/injury-report-with-ids.csv')
 
 
 
