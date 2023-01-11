@@ -61,30 +61,30 @@ for team in teams:
 import csv
 import os.path
 curr_dir = os.path.dirname(os.path.realpath(__file__))
-with open(curr_dir + '/nba-injury-report.csv','r') as csv_input:
-    with open(curr_dir + '/injury-report-with-ids.csv', 'w') as csv_output:
-        writer = csv.writer(csv_output, lineterminator='\n')
-        reader = csv.reader(csv_input)
+with open(curr_dir + '/nba-injury-report.csv','r') as csv_input, \
+        open(curr_dir + '/injury-report-with-ids.csv', 'w') as csv_output:
+    writer = csv.writer(csv_output, lineterminator='\n')
+    reader = csv.reader(csv_input)
 
-        data = []
-        row = next(reader)
-        row.append('player_id')
+    data = []
+    row = next(reader)
+    row.append('player_id')
+    data.append(row)
+
+    for row in reader:
+        cur.execute("""SELECT player_id FROM player_stats WHERE player_name = '{}'""".format(row[0]))
+        player_id = cur.fetchone()
+        if player_id is None:
+            player_id = 'NULL ID'
+        else:
+            player_id = player_id[0]
+
+        row.append(player_id)
         data.append(row)
 
-        for row in reader:
-            cur.execute("""SELECT player_id FROM player_stats WHERE player_name = '{}'""".format(row[0]))
-            player_id = cur.fetchone()
-            if player_id is None:
-                player_id = 'NULL ID'
-            else:
-                player_id = player_id[0]
-
-            row.append(player_id)
-            data.append(row)
-
-        writer.writerows(data)
-        print(data)
-        print(writer)
+    writer.writerows(data)
+    print(data)
+    print(writer)
 
 sql = """CREATE TABLE IF NOT EXISTS injury_report (
          player varchar(32), team varchar(3), pos varchar(2),
