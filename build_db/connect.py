@@ -82,7 +82,7 @@ with open(curr_dir + '/nba-injury-report.csv','r') as csv_input, \
         row.append(player_id)
         data.append(row)
 
-    csv_output.write(data)
+    writer.writerows('\n'.join(','.join(sub) for sub in data))
     print(data)
 
 sql = """CREATE TABLE IF NOT EXISTS injury_report (
