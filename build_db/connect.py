@@ -73,6 +73,7 @@ with open(curr_dir + '/nba-injury-report.csv','r') as csv_input:
 
         for row in reader:
             player_id = cur.execute("""SELECT player_id FROM player_stats WHERE player_name = '{}'""".format(row[0]))
+            print(row[0])
             print(player_id)
             row.append('TEST')
             data.append(row)
@@ -84,9 +85,6 @@ sql = """CREATE TABLE IF NOT EXISTS injury_report (
          injury varchar(64), status varchar(16),
          estimated_return varchar(64), player_id varchar(10))"""
 cur.execute(sql)
-
-import time
-time.sleep(1)
 
 sql = """LOAD DATA LOCAL INFILE '/home/noah/NBAGamePredictor/build_db/injury-report-with-ids.csv' INTO TABLE injury_report
          FIELDS TERMINATED BY ',' ENCLOSED BY '' LINES TERMINATED BY '\n'"""
