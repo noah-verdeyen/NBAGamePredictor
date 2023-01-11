@@ -58,32 +58,24 @@ for team in teams:
     sql = """ALTER IGNORE TABLE {} ADD UNIQUE INDEX u(player_id)""".format(team.lower())
     cur.execute(sql)
 
-import csv
 import os.path
+import pandas as pd
+
 curr_dir = os.path.dirname(os.path.realpath(__file__))
-with open(curr_dir + '/nba-injury-report.csv','r') as csv_input, \
-        open(curr_dir + '/injury-report-with-ids.csv', 'w') as csv_output:
-    writer = csv.writer(csv_output, lineterminator='\n')
-    reader = csv.reader(csv_input)
+data = pd.read_csv('build_db/nba-injury-report.csv')
+for player in data['Player']:
+    cur.execute("""SELECT player_id FROM player_stats WHERE player_name = '{}'""".format(player[0]))
+    player_id = cur.fetchone()
 
-    csv_output.truncate(0)
+    if player_id is None:
+        player_id = 'NULL ID'
+    else:
+        player_id = str(player_id[0])
 
-    data = []
-    row = next(reader)
-    row.append('player_id')
-    data.append(row)
+    data['player_id'] = player_id
 
-    for row in reader:
-        cur.execute("""SELECT player_id FROM player_stats WHERE player_name = '{}'""".format(row[0]))
-        player_id = cur.fetchone()
-        if player_id is None:
-            player_id = 'NULL ID'
-        else:
-            player_id = str(player_id[0])
-
-        row.append(player_id)
-        print(row)
-        writer.writerow(row)
+with open(curr_dir + '/injury-report-with-ids.csv', 'w') as new_injury_data:
+    new_injury_data.write(data.to_csv())
 
 
 sql = """CREATE TABLE IF NOT EXISTS injury_report (
