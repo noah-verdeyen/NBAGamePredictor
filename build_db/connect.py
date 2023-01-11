@@ -63,9 +63,9 @@ import pandas as pd
 
 curr_dir = os.path.dirname(os.path.realpath(__file__))
 data = pd.read_csv(curr_dir + '/nba-injury-report.csv')
+
 player_ids = []
 for player in data['Player']:
-    print("""SELECT player_id FROM player_stats WHERE player_name = '{}'""".format(player))
     cur.execute("""SELECT player_id FROM player_stats WHERE player_name = '{}'""".format(player))
     player_id = cur.fetchone()
     if player_id is None:
@@ -78,6 +78,9 @@ for player in data['Player']:
 data['player_id'] = player_ids
 
 data.to_csv(curr_dir + '/injury-report-with-ids.csv', index=False)
+
+sql = """DROP TABLE IF EXISTS injury_report"""
+cur.execute(sql)
 
 sql = """CREATE TABLE IF NOT EXISTS injury_report (
          player varchar(32), team varchar(3), pos varchar(2),
