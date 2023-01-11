@@ -73,7 +73,7 @@ with open(curr_dir + '/nba-injury-report.csv','r') as csv_input:
 
         for row in reader:
             cur.execute("""SELECT player_id FROM player_stats WHERE player_name = '{}'""".format(row[0]))
-            row.append(cur.fetchone()[0])
+            row.append(str(cur.fetchone()[0]))
             print(row)
             data.append(row)
 
