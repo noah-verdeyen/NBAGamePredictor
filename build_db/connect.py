@@ -72,9 +72,8 @@ with open(curr_dir + '/nba-injury-report.csv','r') as csv_input:
         data.append(row)
 
         for row in reader:
-            print("""SELECT player_id FROM player_stats WHERE player_name = '{}';""".format(row[0]))
-            player_id = cur.execute("""SELECT player_id FROM player_stats WHERE player_name = '{}';""".format(row[0]))
-            print(row[0])
+            cur.execute("""SELECT player_id FROM player_stats WHERE player_name = '{}'""".format(row[0]))
+            player_id = cur.fetchall()
             print(player_id)
             row.append('TEST')
             data.append(row)
