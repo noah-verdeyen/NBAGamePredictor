@@ -64,7 +64,7 @@ import pandas as pd
 curr_dir = os.path.dirname(os.path.realpath(__file__))
 data = pd.read_csv(curr_dir + '/nba-injury-report.csv')
 for player in data['Player']:
-    print(player)
+    print("""SELECT player_id FROM player_stats WHERE player_name = '{}'""".format(player))
     cur.execute("""SELECT player_id FROM player_stats WHERE player_name = '{}'""".format(player))
     player_id = cur.fetchone()
     if player_id is None:
@@ -72,6 +72,7 @@ for player in data['Player']:
     else:
         player_id = str(player_id[0])
 
+    print(player_id)
     data['player_id'] = player_id
 
 data.to_csv(curr_dir + '/injury-report-with-ids.csv', index=False)
