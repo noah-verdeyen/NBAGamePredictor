@@ -66,6 +66,8 @@ with open(curr_dir + '/nba-injury-report.csv','r') as csv_input, \
     writer = csv.writer(csv_output, lineterminator='\n')
     reader = csv.reader(csv_input)
 
+    csv_output.truncate(0)
+
     data = []
     row = next(reader)
     row.append('player_id')
@@ -80,6 +82,7 @@ with open(curr_dir + '/nba-injury-report.csv','r') as csv_input, \
             player_id = player_id[0]
 
         row.append(player_id)
+        print(row)
         writer.writerow(row)
 
 
