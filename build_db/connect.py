@@ -65,7 +65,7 @@ curr_dir = os.path.dirname(os.path.realpath(__file__))
 data = pd.read_csv('build_db/nba-injury-report.csv')
 for player in data['Player']:
     print(player)
-    cur.execute("""SELECT player_id FROM player_stats WHERE player_name = '{}'""".format(player[0]))
+    cur.execute("""SELECT player_id FROM player_stats WHERE player_name = '{}'""".format(player))
     player_id = cur.fetchone()
     print(player_id)
     if player_id is None:
