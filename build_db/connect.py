@@ -1,5 +1,7 @@
 import mariadb
 import sys
+import os.path
+import pandas as pd
 
 try:
     conn = mariadb.connect(
@@ -58,10 +60,15 @@ for team in teams:
     sql = """ALTER IGNORE TABLE {} ADD UNIQUE INDEX u(player_id)""".format(team.lower())
     cur.execute(sql)
 
+csv_in = pd.read_csv("{}/nba-injury-report.csv".format(os.path.dirname(os.path.realpath(__file__))))
+csv_in['player_id'] = cur.execute("""SELECT player_id FROM player_stats WHERE play_name = '{}'""".format(csv_in['player']))
+csv_in.to_csv('injury-report-with-ids.csv', index=False)
+
 sql = """CREATE TABLE IF NOT EXISTS injury_report (
          player varchar(32), team varchar(3), pos varchar(2),
-         injury varchar(64), status varchar(16))"""
+         injury varchar(64), status varchar(16)),
+         estimated_return varchar(64), player_id varchar(10)"""
 cur.execute(sql)
-sql = """LOAD DATA LOCAL INFILE '/home/noah/NBAGamePredictor/build_db/nba-injury-report.csv' INTO TABLE injury_report
-         FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n'"""
+sql = """LOAD DATA LOCAL INFILE '/home/noah/NBAGamePredictor/build_db/injury-report-with-ids.csv' INTO TABLE injury_report
+         FIELDS TERMINATED BY ',' ENCLOSED BY '' LINES TERMINATED BY '\n'"""
 cur.execute(sql)
