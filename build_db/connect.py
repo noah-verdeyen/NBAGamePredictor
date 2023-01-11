@@ -73,9 +73,8 @@ for player in data['Player']:
 
     data['player_id'] = player_id
 
-print(curr_dir + '/injury-report-with-ids.csv')
-with open(curr_dir + '/injury-report-with-ids.csv', 'w') as new_injury_data:
-    new_injury_data.write(data.to_csv())
+    data.to_csv(curr_dir + '/injury-report-with-ids.csv')
+
 
 
 sql = """CREATE TABLE IF NOT EXISTS injury_report (
