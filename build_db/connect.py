@@ -62,7 +62,7 @@ import os.path
 import pandas as pd
 
 curr_dir = os.path.dirname(os.path.realpath(__file__))
-data = pd.read_csv('build_db/nba-injury-report.csv')
+data = pd.read_csv(curr_dir + '/nba-injury-report.csv')
 for player in data['Player']:
     cur.execute("""SELECT player_id FROM player_stats WHERE player_name = '{}'""".format(player))
     player_id = cur.fetchone()
