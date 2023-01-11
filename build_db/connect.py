@@ -85,6 +85,6 @@ sql = """CREATE TABLE IF NOT EXISTS injury_report (
          estimated_return varchar(64), player_id varchar(10))"""
 cur.execute(sql)
 
-sql = """LOAD DATA LOCAL INFILE {}/injury-report-with-ids.csv' INTO TABLE injury_report
+sql = """LOAD DATA LOCAL INFILE '{}/injury-report-with-ids.csv' INTO TABLE injury_report
          FIELDS TERMINATED BY ',' ENCLOSED BY '' LINES TERMINATED BY '\n'""".format(curr_dir)
 cur.execute(sql)
