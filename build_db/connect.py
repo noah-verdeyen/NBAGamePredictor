@@ -73,7 +73,7 @@ for player in data['Player']:
 
     data['player_id'] = player_id
 
-    data.to_csv(curr_dir + '/injury-report-with-ids.csv')
+data.to_csv(curr_dir + '/injury-report-with-ids.csv')
 
 
 
