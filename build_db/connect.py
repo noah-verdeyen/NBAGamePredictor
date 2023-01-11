@@ -89,5 +89,5 @@ sql = """CREATE TABLE IF NOT EXISTS injury_report (
 cur.execute(sql)
 
 sql = """LOAD DATA LOCAL INFILE '{}/injury-report-with-ids.csv' INTO TABLE injury_report
-         FIELDS TERMINATED BY ',' ENCLOSED BY '' LINES TERMINATED BY '\n'""".format(curr_dir)
+         FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n'""".format(curr_dir)
 cur.execute(sql)
