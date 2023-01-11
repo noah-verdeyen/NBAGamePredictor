@@ -61,7 +61,7 @@ for team in teams:
     cur.execute(sql)
 
 csv_in = pd.read_csv("{}/nba-injury-report.csv".format(os.path.dirname(os.path.realpath(__file__))))
-csv_in['player_id'] = cur.execute("""SELECT player_id FROM player_stats WHERE play_name = '{}'""".format(csv_in['player']))
+csv_in['player_id'] = cur.execute("""SELECT player_id FROM player_stats WHERE play_name = '{}'""".format(csv_in['Player']))
 csv_in.to_csv('injury-report-with-ids.csv', index=False)
 
 sql = """CREATE TABLE IF NOT EXISTS injury_report (
