@@ -76,6 +76,8 @@ with open(curr_dir + '/nba-injury-report.csv','r') as csv_input:
             player_id = cur.fetchone()
             if player_id is None:
                 player_id = 'NULL ID'
+            else:
+                player_id = player_id[0]
             row.append(player_id)
             print(row)
             data.append(row)
