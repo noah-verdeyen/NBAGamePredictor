@@ -69,6 +69,10 @@ sql = """CREATE TABLE IF NOT EXISTS injury_report (
          injury varchar(64), status varchar(16),
          estimated_return varchar(64), player_id varchar(10))"""
 cur.execute(sql)
+
+import time
+time.sleep(1)
+
 sql = """LOAD DATA LOCAL INFILE '/home/noah/NBAGamePredictor/build_db/injury-report-with-ids.csv' INTO TABLE injury_report
          FIELDS TERMINATED BY ',' ENCLOSED BY '' LINES TERMINATED BY '\n'"""
 cur.execute(sql)
