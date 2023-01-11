@@ -76,7 +76,6 @@ for player in data['Player']:
     data['player_id'] = player_id
 
 with open(curr_dir + '/injury-report-with-ids.csv', 'w') as new_injury_data:
-    print(data.to_csv())
     new_injury_data.write(data.to_csv())
 
 
