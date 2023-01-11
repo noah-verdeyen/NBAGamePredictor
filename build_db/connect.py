@@ -61,8 +61,8 @@ for team in teams:
 import csv
 import os.path
 curr_dir = os.path.dirname(os.path.realpath(__file__))
-with open(curr_dir + 'nba-injury-report.csv','r') as csv_input:
-    with open(curr_dir + 'injury-report-with-ids.csv', 'w') as csv_output:
+with open(curr_dir + '/nba-injury-report.csv','r') as csv_input:
+    with open(curr_dir + '/injury-report-with-ids.csv', 'w') as csv_output:
         writer = csv.writer(csv_output, lineterminator='\n')
         reader = csv.reader(csv_input)
 
